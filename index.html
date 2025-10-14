@@ -5,19 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cryptocurrency Price Tracker</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Crypto Price Tracker</h1>
+        <header>
+            <h1>Crypto Price Tracker</h1>
+            <div class="controls">
+                <button id="theme-toggle" aria-label="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <select id="currency-select" aria-label="Select currency">
+                    <option value="usd">USD</option>
+                    <option value="eur">EUR</option>
+                    <option value="gbp">GBP</option>
+                </select>
+                <select id="language-select" aria-label="Select language">
+                    <option value="en">English</option>
+                    <option value="es">Español</option>
+                    <option value="fr">Français</option>
+                </select>
+            </div>
+        </header>
+        
+        <div class="search-container">
+            <div id="coin-search">
+                <input type="text" id="coin-search-input" placeholder="Search coins..." aria-label="Search coins">
+                <button id="add-coin" aria-label="Add selected coin">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div id="selected-coins"></div>
+        </div>
+
         <div id="error-message" class="error-message" style="display:none;"></div>
+        <div id="offline-banner" class="offline-banner" style="display:none;">
+            You are offline. Displaying cached data.
+        </div>
+
+        <div class="view-controls">
+            <button id="show-favorites" aria-label="Show favorites only">
+                <i class="fas fa-star"></i> Favorites
+            </button>
+            <button id="show-all" aria-label="Show all coins">
+                <i class="fas fa-list"></i> All Coins
+            </button>
+        </div>
+
         <table id="crypto-table">
             <thead>
                 <tr>
+                    <th>Favorite</th>
                     <th>Coin</th>
-                    <th>Price (USD)</th>
+                    <th>Price</th>
+                    <th>24h Chart</th>
                     <th>Market Cap</th>
                     <th>24h Change (%)</th>
                     <th>24h Volume</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -25,6 +71,42 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Modal for Historical Data -->
+    <div id="history-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modal-title"></h2>
+            <div class="chart-controls">
+                <button data-range="7">7 Days</button>
+                <button data-range="30">30 Days</button>
+            </div>
+            <canvas id="history-chart"></canvas>
+        </div>
+    </div>
+
+    <!-- Modal for Price Alerts -->
+    <div id="alerts-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Set Price Alert</h2>
+            <form id="alert-form">
+                <div class="form-group">
+                    <label for="alert-price">Price Threshold:</label>
+                    <input type="number" id="alert-price" required>
+                </div>
+                <div class="form-group">
+                    <label for="alert-condition">Condition:</label>
+                    <select id="alert-condition">
+                        <option value="above">Above</option>
+                        <option value="below">Below</option>
+                    </select>
+                </div>
+                <button type="submit">Set Alert</button>
+            </form>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
